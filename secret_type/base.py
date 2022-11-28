@@ -1,3 +1,4 @@
+import gc
 import pickle
 import secrets
 from contextlib import contextmanager
@@ -63,6 +64,11 @@ class Secret(Generic[T], SecretMonad):
     def __init__(self, value: T):
         key = self.__key = Fernet.generate_key()
         self.__value = Fernet(key).encrypt(pickle.dumps(value, pickle.HIGHEST_PROTOCOL))
+
+    def __del__(self):
+        del self.__key
+        del self.__value
+        gc.collect()
 
     def cast(self, t: Type[T2], *args, **kwargs) -> "Secret[T2]":
         # Up to the user to provide a valid cast
