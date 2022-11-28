@@ -2,10 +2,10 @@ import secrets
 from typing import Sequence, Type, cast
 
 from secret_type.base import Secret
-from secret_type.types import StringLike, T
+from secret_type.types import S, T
 
 
-class SecretStr(Secret[StringLike], Sequence):
+class SecretStr(Secret[S], Sequence):
     def cast(self, t: Type[T], *args, **kwargs) -> "Secret[T]":
         if self.protected_type is t:
             val = self

@@ -1,8 +1,11 @@
+import pickle
 import secrets
 from contextlib import contextmanager
 from functools import wraps
-from numbers import Integral
+from numbers import Rational
 from typing import Any, Callable, Generator, Generic, Optional, Type, Union, overload
+
+from cryptography.fernet import Fernet
 
 from secret_type.exceptions import *
 from secret_type.types import *
@@ -44,8 +47,8 @@ class SecretMonad:
             return SecretStr(o)
         elif isinstance(o, bool):
             return SecretBool(o)
-        elif isinstance(o, Integral):
-            return SecretNumber(o)  # pyright: ignore [reportGeneralTypeIssues]
+        elif isinstance(o, Rational):
+            return SecretNumber(o)
         elif isinstance(o, Number):
             return Secret(o)
         else:
@@ -58,7 +61,8 @@ class Secret(Generic[T], SecretMonad):
         return SecretStr(secrets.token_hex(length // 2 if length else None))
 
     def __init__(self, value: T):
-        self.__value = value
+        key = self.__key = Fernet.generate_key()
+        self.__value = Fernet(key).encrypt(pickle.dumps(value, pickle.HIGHEST_PROTOCOL))
 
     def cast(self, t: Type[T2], *args, **kwargs) -> "Secret[T2]":
         # Up to the user to provide a valid cast
@@ -66,7 +70,7 @@ class Secret(Generic[T], SecretMonad):
 
     @property
     def protected_type(self) -> type:
-        return type(self.__value)
+        return type(self._dangerous_extract())
 
     def __int__(self) -> int:
         raise SecretException()
@@ -90,13 +94,13 @@ class Secret(Generic[T], SecretMonad):
         raise SecretKeyException()
 
     def __bool__(self) -> "SecretBool":
-        return SecretBool(bool(self.__value))
+        return SecretBool(bool(self._dangerous_extract()))
 
     def __repr__(self) -> str:
         return f"Secret({self.protected_type}, <hidden>)"
 
     def _dangerous_apply(self, fn: Callable[[T], R]) -> R:
-        return fn(self.__value)
+        return fn(pickle.loads(Fernet(self.__key).decrypt(self.__value)))
 
     def _dangerous_extract(self) -> T:
         return self._dangerous_apply(lambda x: x)
@@ -112,9 +116,9 @@ class Secret(Generic[T], SecretMonad):
 
     def __eq__(self, o: Union["Secret[T2]", R]) -> "SecretBool":
         a, b = SecretMonad.unwrap(self), SecretMonad.unwrap(o)
-        aval = a if isinstance(a, (str, bytes)) else repr(a)
+        aval = a if isinstance(a, (str, bytes)) else str(a)
         if isinstance(b, type(a)):
-            bval = b if isinstance(b, (str, bytes)) else repr(b)
+            bval = b if isinstance(b, (str, bytes)) else str(b)
             return SecretBool(secrets.compare_digest(aval, bval))
         else:
             # If the types don't match, we want to always return False
@@ -126,23 +130,23 @@ class Secret(Generic[T], SecretMonad):
         return self.__eq__(o).flip()
 
     def __add__(self, other) -> "Secret[T]":
-        return Secret.wrap(self.__value + other)
+        return Secret.wrap(self._dangerous_extract() + other)
 
     def __radd__(self, other) -> "Secret[T]":
-        return Secret.wrap(other + self.__value)
+        return Secret.wrap(other + self._dangerous_extract())
 
     def __mul__(self, other) -> "Secret[T]":
-        return Secret.wrap(self.__value * other)
+        return Secret.wrap(self._dangerous_extract() * other)
 
     def __rmul__(self, other) -> "Secret[T]":
-        return Secret.wrap(other * self.__value)
+        return Secret.wrap(other * self._dangerous_extract())
 
     def __getattr__(self, name: str) -> Any:
         # Wrap any additional type methods that return a ProtectedValue
         if name not in dir(self.protected_type):
             raise SecretAttributeError(self, name)
 
-        fn = getattr(self.__value, name)
+        fn = getattr(self._dangerous_extract(), name)
         if not isinstance(fn, Callable):
             raise SecretAttributeError(self, name)
 

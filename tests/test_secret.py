@@ -6,11 +6,7 @@ import pytest
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 
 from secret_type import Secret
-from secret_type.exceptions import (
-    SecretBoolException,
-    SecretException,
-    SecretFloatException,
-)
+from secret_type.exceptions import SecretBoolException, SecretException
 from secret_type.number import SecretNumber
 
 
@@ -100,16 +96,14 @@ class TestSecret:
         one_thousand_six_hundred = one_hundred << 4
         one_hundred_squared = (one_thousand_six_hundred >> 4) * one_hundred
 
-        with pytest.raises(SecretFloatException):
-            one_hundred_squared.dangerous_apply(math.sqrt)
-
-        one_hundred_again = one_hundred_squared.dangerous_apply(lambda x: x // 100)
+        one_hundred_again = one_hundred_squared.dangerous_apply(math.sqrt)
+        two_hundred = one_hundred_again + one_hundred
 
         with pytest.raises(SecretException):
-            print(one_hundred_again)
+            print(two_hundred)
 
-        with one_hundred_again.dangerous_reveal() as revealed:
-            assert revealed == 100
+        with two_hundred.cast(int).dangerous_reveal() as revealed:
+            assert revealed is 200
 
     def test_token(self):
         token = Secret.token(32)

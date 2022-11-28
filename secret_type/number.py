@@ -12,12 +12,12 @@ class SecretNumberMeta(ABCMeta):
     @classmethod
     def _make_wrapper(mcls, cls, op):
         def forward(self, other, *args, **kwargs):
-            return cls(
+            return Secret.wrap(
                 getattr(operator, op)(self._dangerous_extract(), other, *args, **kwargs)
             )
 
         def backward(self, other, *args, **kwargs):
-            return cls(
+            return Secret.wrap(
                 getattr(operator, op)(other, self._dangerous_extract(), *args, **kwargs)
             )
 
@@ -45,12 +45,10 @@ class SecretNumber(IntegerOps, Secret[N], Integral, metaclass=SecretNumberMeta):
         raise SecretKeyException()
 
     def __int__(self) -> "SecretNumber[int]":
-        return SecretNumber(
-            int(self._dangerous_extract())
-        )  # pyright: ignore [reportGeneralTypeIssues]
+        return SecretNumber(int(self._dangerous_extract()))
 
-    def __float__(self) -> float:
-        raise SecretFloatException()
+    def __float__(self) -> "SecretNumber[float]":
+        return SecretNumber(float(self._dangerous_extract()))
 
     def __complex__(self) -> complex:
         raise SecretFloatException()
