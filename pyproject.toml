@@ -25,9 +25,9 @@ dependencies = ["cryptography"]
 dynamic = ["version"]
 
 [project.urls]
-Documentation = "https://github.com/unknown/secret-type#readme"
-Issues = "https://github.com/unknown/secret-type/issues"
-Source = "https://github.com/unknown/secret-type"
+Documentation = "https://github.com/yasyf/secret-type#readme"
+Issues = "https://github.com/yasyf/secret-type/issues"
+Source = "https://github.com/yasyf/secret-type"
 
 [tool.hatch.version]
 path = "secret_type/__about__.py"
