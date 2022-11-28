@@ -2,7 +2,7 @@ import secrets
 from contextlib import contextmanager
 from functools import wraps
 from numbers import Integral
-from typing import Any, Callable, Generator, Generic, Type, Union, cast, overload
+from typing import Any, Callable, Generator, Generic, Type, Union, overload
 
 from secret_type.exceptions import *
 from secret_type.types import *
@@ -58,8 +58,7 @@ class Secret(Generic[T], SecretMonad):
 
     def cast(self, t: Type[T2], *args, **kwargs) -> "Secret[T2]":
         # Up to the user to provide a valid cast
-        val = self.dangerous_apply(lambda x: t(x, *args, **kwargs))  # type: ignore
-        return cast(Secret[T2], val)
+        return self.dangerous_apply(lambda x: t(x, *args, **kwargs))  # type: ignore
 
     @property
     def protected_type(self) -> type:

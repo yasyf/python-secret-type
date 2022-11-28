@@ -4,38 +4,11 @@ from numbers import Integral
 
 from secret_type.base import Secret
 from secret_type.exceptions import SecretFloatException, SecretKeyException
+from secret_type.number_types import IntegerOps
 from secret_type.types import N
 
 
 class SecretNumberMeta(ABCMeta):
-    BI_OPS = [
-        "add",
-        "sub",
-        "mul",
-        "truediv",
-        "floordiv",
-        "mod",
-        "divmod",
-        "pow",
-        "lshift",
-        "rshift",
-        "and",
-        "xor",
-        "or",
-    ]
-    UNI_OPS = [
-        "neg",
-        "pos",
-        "abs",
-        "invert",
-        "round",
-        "trunc",
-        "floor",
-        "ceil",
-        "lt",
-        "le",
-    ]
-
     @classmethod
     def _make_wrapper(mcls, cls, op):
         def forward(self, other, *args, **kwargs):
@@ -59,16 +32,16 @@ class SecretNumberMeta(ABCMeta):
 
     def __new__(mcls, name, bases, attrs):
         cls = super().__new__(mcls, name, bases, attrs)
-        for op in mcls.UNI_OPS + mcls.BI_OPS:
+        for op in IntegerOps.UNI_OPS + IntegerOps.BI_OPS:
             forward, backward = mcls._make_wrapper(cls, op)
             mcls._make_concrete(cls, forward)
-            if op in mcls.BI_OPS:
+            if op in IntegerOps.BI_OPS:
                 mcls._make_concrete(cls, backward)
         return cls
 
 
-class SecretNumber(Secret[N], Integral, metaclass=SecretNumberMeta):
-    def __index__(self) -> int:
+class SecretNumber(IntegerOps, Secret[N], Integral, metaclass=SecretNumberMeta):
+    def __index__(self) -> "SecretNumber[int]":
         raise SecretKeyException()
 
     def __int__(self) -> "SecretNumber[int]":

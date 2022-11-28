@@ -87,7 +87,7 @@ class TestSecret:
             assert revealed == "foobar123foobar"
 
     def test_secret_multiply(self, secret: Secret[str]):
-        result = secret * 3
+        result = 1 * secret * 3
 
         with pytest.raises(SecretException):
             print(result)
@@ -97,12 +97,13 @@ class TestSecret:
 
     def test_int_secret(self, int_secret: SecretNumber[int]):
         one_hundred = int_secret + 58
-        one_hundred_squared = one_hundred**2
+        one_thousand_six_hundred = one_hundred << 4
+        one_hundred_squared = (one_thousand_six_hundred >> 4) * one_hundred
 
         with pytest.raises(SecretFloatException):
-            math.sqrt(one_hundred_squared)
+            one_hundred_squared.dangerous_apply(math.sqrt)
 
-        one_hundred_again = one_hundred_squared.dangerous_apply(math.sqrt)
+        one_hundred_again = one_hundred_squared.dangerous_apply(lambda x: x // 100)
 
         with pytest.raises(SecretException):
             print(one_hundred_again)
