@@ -1,45 +1,10 @@
 import secrets
 from contextlib import contextmanager
 from functools import wraps
-from typing import (
-    Any,
-    Callable,
-    Generator,
-    Generic,
-    Sequence,
-    Type,
-    TypeVar,
-    Union,
-    cast,
-    overload,
-)
+from typing import Any, Callable, Generator, Generic, Type, Union, cast, overload
 
-StringLike = Union[str, bytes]
-ProtectedValue = Union[bytes, str, int, float, bool]
-
-T = TypeVar("T", bound=ProtectedValue)
-T2 = TypeVar("T2", bound=ProtectedValue)
-S = TypeVar("S", bound=StringLike)
-R = TypeVar("R")
-
-
-class SecretException(Exception):
-    def __init__(self, message: str = "Secrets cannot be examined") -> None:
-        super().__init__(message)
-
-
-class SecretBoolException(SecretException):
-    def __init__(
-        self,
-        message: str = "bools derived from Secrets cannot be used for control flow",
-    ) -> None:
-        super().__init__(message)
-
-
-class SecretAttributeError(AttributeError, SecretException):
-    def __init__(self, s: "Secret", name: str) -> None:
-        message = f"{s.protected_type.__name__} has no attribute {name}"
-        super().__init__(message)
+from secret_type.exceptions import *
+from secret_type.types import *
 
 
 class SecretMonad:
@@ -186,49 +151,5 @@ class Secret(Generic[T], SecretMonad):
         return wrapped
 
 
-class SecretBool(Secret[bool]):
-    def flip(self):
-        return SecretBool(not self._dangerous_extract())
-
-    def __bool__(self):
-        raise SecretBoolException()
-
-    def __eq__(self, other):
-        return self.dangerous_apply(lambda x: x == other)
-
-    def __repr__(self):
-        return repr(self._dangerous_extract())
-
-    def __str__(self):
-        return str(self._dangerous_extract())
-
-
-class SecretStr(Secret[StringLike], Sequence):
-    def cast(self, t: Type[T], *args, **kwargs) -> "Secret[T]":
-        if self.protected_type is t:
-            val = self
-        elif t is bytes:
-            # str -> bytes
-            val = self.dangerous_apply(lambda x: cast(str, x).encode())
-        elif t is str:
-            # bytes -> str
-            val = self.dangerous_apply(lambda x: cast(bytes, x).decode())
-        else:
-            return super().cast(t, *args, **kwargs)
-
-        return cast(Secret[T], val)
-
-    def __len__(self):
-        return secrets.randbelow(10_000)
-
-    def __getitem__(self, index):
-        return self.dangerous_apply(lambda x: x[index])
-
-    def __reverse__(self):
-        return self.dangerous_apply(lambda x: x[::-1])
-
-    def __contains__(self, item):
-        return self.dangerous_apply(lambda x: item in x)
-
-    def __iter__(self):
-        return (Secret(x) for x in self._dangerous_extract())
+from secret_type.bool import SecretBool
+from secret_type.sequence import SecretStr
