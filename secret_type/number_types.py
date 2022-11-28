@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Literal, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Optional, Tuple, Union
 
 if TYPE_CHECKING:
     from secret_type.number import SecretNumber
@@ -76,7 +76,7 @@ class IntegerOps:
         ...
 
     def __pow__(
-        self, __x: Union[int, "SecretNumber", Literal[2]], __modulo: int
+        self, __x: Union[int, "SecretNumber"], __modulo: int
     ) -> "SecretNumber[int]":
         ...
 
