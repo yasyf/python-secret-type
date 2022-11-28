@@ -2,7 +2,7 @@ import secrets
 from contextlib import contextmanager
 from functools import wraps
 from numbers import Integral
-from typing import Any, Callable, Generator, Generic, Type, Union, overload
+from typing import Any, Callable, Generator, Generic, Optional, Type, Union, overload
 
 from secret_type.exceptions import *
 from secret_type.types import *
@@ -53,6 +53,10 @@ class SecretMonad:
 
 
 class Secret(Generic[T], SecretMonad):
+    @classmethod
+    def token(cls, length: Optional[int] = None) -> "SecretStr":
+        return SecretStr(secrets.token_hex(length // 2 if length else None))
+
     def __init__(self, value: T):
         self.__value = value
 

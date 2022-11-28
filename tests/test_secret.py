@@ -110,3 +110,12 @@ class TestSecret:
 
         with one_hundred_again.dangerous_reveal() as revealed:
             assert revealed == 100
+
+    def test_token(self):
+        token = Secret.token(32)
+
+        with pytest.raises(SecretException):
+            print(token)
+
+        with token.dangerous_reveal() as revealed:
+            assert len(revealed) == 32
