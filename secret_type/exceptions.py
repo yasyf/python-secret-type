@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from secret_type.secret import Secret
+    from secret_type.base import Secret
 
 
 class SecretException(Exception):

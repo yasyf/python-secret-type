@@ -1,5 +1,5 @@
+from secret_type.base import Secret
 from secret_type.exceptions import SecretBoolException
-from secret_type.secret import Secret
 
 
 class SecretBool(Secret[bool]):

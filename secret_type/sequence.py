@@ -1,7 +1,7 @@
 import secrets
 from typing import Sequence, Type, cast
 
-from secret_type.secret import Secret
+from secret_type.base import Secret
 from secret_type.types import StringLike, T
 
 

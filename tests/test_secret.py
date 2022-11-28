@@ -4,7 +4,8 @@ import os
 import pytest
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 
-from secret_type import Secret, SecretBoolException, SecretException
+from secret_type import Secret
+from secret_type.exceptions import SecretBoolException, SecretException
 
 
 class TestSecret:

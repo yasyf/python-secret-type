@@ -2,4 +2,9 @@
 #
 # SPDX-License-Identifier: MIT
 
-from .secret import Secret, SecretException, SecretBoolException
+from secret_type.base import Secret
+from secret_type.types import T
+
+
+def secret(o: T) -> Secret[T]:
+    return Secret.wrap(o)
