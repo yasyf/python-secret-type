@@ -5,6 +5,7 @@ import os
 import pytest
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 
+import secret_type
 from secret_type import Secret
 from secret_type.exceptions import SecretBoolException, SecretException
 from secret_type.number import SecretNumber
@@ -18,6 +19,9 @@ class TestSecret:
     @pytest.fixture
     def int_secret(self) -> Secret[int]:
         return Secret.wrap(42)
+
+    def test_constructor(self):
+        assert isinstance(secret_type.secret(b"foobar"), Secret)
 
     def test_print_secret(self, secret: Secret[str]):
         with pytest.raises(SecretException):
