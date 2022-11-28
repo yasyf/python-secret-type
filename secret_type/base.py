@@ -1,6 +1,7 @@
 import secrets
 from contextlib import contextmanager
 from functools import wraps
+from numbers import Integral
 from typing import Any, Callable, Generator, Generic, Type, Union, cast, overload
 
 from secret_type.exceptions import *
@@ -43,7 +44,9 @@ class SecretMonad:
             return SecretStr(o)
         elif isinstance(o, bool):
             return SecretBool(o)
-        elif isinstance(o, (int, float)):
+        elif isinstance(o, Integral):
+            return SecretNumber(o)  # pyright: ignore [reportGeneralTypeIssues]
+        elif isinstance(o, Number):
             return Secret(o)
         else:
             raise TypeError("Cannot wrap type '{}'".format(type(o).__name__))
@@ -81,13 +84,13 @@ class Secret(Generic[T], SecretMonad):
         raise SecretException()
 
     def __hash__(self) -> str:
-        raise SecretException("Secrets cannot be used as keys")
+        raise SecretKeyException()
 
     def __bool__(self) -> "SecretBool":
         return SecretBool(bool(self.__value))
 
     def __repr__(self) -> str:
-        return f"Secret({self.value_type}, <hidden>)"
+        return f"Secret({self.protected_type}, <hidden>)"
 
     def _dangerous_apply(self, fn: Callable[[T], R]) -> R:
         return fn(self.__value)
@@ -119,16 +122,16 @@ class Secret(Generic[T], SecretMonad):
     def __ne__(self, o: object) -> "SecretBool":
         return self.__eq__(o).flip()
 
-    def __add__(self, other):
+    def __add__(self, other) -> "Secret[T]":
         return Secret.wrap(self.__value + other)
 
-    def __radd__(self, other):
+    def __radd__(self, other) -> "Secret[T]":
         return Secret.wrap(other + self.__value)
 
-    def __mul__(self, other):
+    def __mul__(self, other) -> "Secret[T]":
         return Secret.wrap(self.__value * other)
 
-    def __rmul__(self, other):
+    def __rmul__(self, other) -> "Secret[T]":
         return Secret.wrap(other * self.__value)
 
     def __getattr__(self, name: str) -> Any:
@@ -152,4 +155,5 @@ class Secret(Generic[T], SecretMonad):
 
 
 from secret_type.bool import SecretBool
+from secret_type.number import SecretNumber
 from secret_type.sequence import SecretStr

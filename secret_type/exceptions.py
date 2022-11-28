@@ -9,6 +9,22 @@ class SecretException(Exception):
         super().__init__(message)
 
 
+class SecretFloatException(SecretException):
+    def __init__(
+        self,
+        message: str = "Secrets cannot be used as non-integral numbers",
+    ) -> None:
+        super().__init__(message)
+
+
+class SecretKeyException(SecretException):
+    def __init__(
+        self,
+        message: str = "Secrets cannot be used as keys",
+    ) -> None:
+        super().__init__(message)
+
+
 class SecretBoolException(SecretException):
     def __init__(
         self,

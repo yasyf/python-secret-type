@@ -1,17 +1,27 @@
 import hashlib
+import math
 import os
 
 import pytest
 from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 
 from secret_type import Secret
-from secret_type.exceptions import SecretBoolException, SecretException
+from secret_type.exceptions import (
+    SecretBoolException,
+    SecretException,
+    SecretFloatException,
+)
+from secret_type.number import SecretNumber
 
 
 class TestSecret:
     @pytest.fixture
     def secret(self) -> Secret[str]:
         return Secret.wrap("foobar123")
+
+    @pytest.fixture
+    def int_secret(self) -> Secret[int]:
+        return Secret.wrap(42)
 
     def test_print_secret(self, secret: Secret[str]):
         with pytest.raises(SecretException):
@@ -66,3 +76,36 @@ class TestSecret:
         kdf = Scrypt(salt=salt, length=32, n=2**14, r=8, p=1)
         with secret.cast(bytes).dangerous_reveal() as revealed:
             kdf.verify(revealed, key_plain)
+
+    def test_secret_concat(self, secret: Secret[str]):
+        result = secret + "foobar"
+
+        with pytest.raises(SecretException):
+            print(result)
+
+        with result.dangerous_reveal() as revealed:
+            assert revealed == "foobar123foobar"
+
+    def test_secret_multiply(self, secret: Secret[str]):
+        result = secret * 3
+
+        with pytest.raises(SecretException):
+            print(result)
+
+        with result.dangerous_reveal() as revealed:
+            assert revealed == "foobar123" * 3
+
+    def test_int_secret(self, int_secret: SecretNumber[int]):
+        one_hundred = int_secret + 58
+        one_hundred_squared = one_hundred**2
+
+        with pytest.raises(SecretFloatException):
+            math.sqrt(one_hundred_squared)
+
+        one_hundred_again = one_hundred_squared.dangerous_apply(math.sqrt)
+
+        with pytest.raises(SecretException):
+            print(one_hundred_again)
+
+        with one_hundred_again.dangerous_reveal() as revealed:
+            assert revealed == 100
