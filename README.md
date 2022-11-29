@@ -49,7 +49,7 @@ a very secret value!
 
 For complete docs, see the [Quickstart](https://python-secret-type.readthedocs.io/en/latest/quickstart/).
 # Comparison to Rune
-Rune makes the following guarantees about a `secret`:
+Rune makes [the following guarantees](https://github.com/google/rune/blob/main/doc/index.md#security-first) about a `secret`:
 
 > - All operations on secrets occur in constant time, minimizing timing side-channel leakage.
 > - Secrets cannot be used in conditional branches or memory addressing.
