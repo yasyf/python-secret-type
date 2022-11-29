@@ -44,16 +44,7 @@ Source = "https://github.com/yasyf/secret-type"
 path = "secret_type/__about__.py"
 
 [tool.hatch.envs.default]
-dependencies = [
-  "pytest",
-  "pytest-cov",
-  "mkdocs~=1.4.2",
-  "mkdocstrings[python]~=0.19.0",
-  "mkdocs-material~=8.5.10",
-  "mkdocs-git-committers-plugin-2",
-  "lxml",
-  "Pygments~=2.13.0",
-]
+dependencies = ["pytest", "pytest-cov"]
 [tool.hatch.envs.default.scripts]
 cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=secret_type --cov=tests {args}"
 no-cov = "cov --no-cov {args}"
