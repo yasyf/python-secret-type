@@ -19,16 +19,16 @@ pip install secret-type
 
 ```pycon
 >>> from secret_type import secret
->>> password = secret("a very secret value")
+>>> password = secret("a very secret value") # Secrets can be any primitive value
 
->>> print(password)
+>>> print(password) # Runtime exceptions prevent logging
 Traceback (most recent call last):
   File "<stdin>", line 1, in <module>
   File "secret_type/containers/secret.py", line 91, in __str__
     raise SecretException()
 secret_type.exceptions.SecretException: Secrets cannot be examined
 
->>> better_password = password + "!"
+>>> better_password = password + "!" # Operations derive new secrets
 >>> >>> type(better_password)
 <class 'secret_type.sequence.SecretStr'>
 
