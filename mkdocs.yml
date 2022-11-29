@@ -1,8 +1,31 @@
 site_name: secret-type
+site_url: https://python-secret-type.readthedocs.io
+nav:
+  - Home: index.md
+  - Quickstart: quickstart.md
+  - API Reference:
+      - reference/index.md
+      - reference/exceptions.md
+      - reference/monad.md
+      - reference/types.md
+      - Containers:
+          - reference/containers/Secret.md
+          - reference/containers/SecretBool.md
+          - reference/containers/SecretNumber.md
+          - reference/containers/SecretStr.md
 theme:
   name: material
   features:
     - content.code.annotate
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.expand
+    - navigation.indexes
+    - navigation.top
+    - toc.follow
+    - toc.integrate
 plugins:
   - search
   - autorefs
@@ -12,15 +35,21 @@ plugins:
         python:
           import:
             - https://docs.python.org/3.10/objects.inv
+            - https://typing.readthedocs.io/en/latest/objects.inv
+            - https://cryptography.io/en/latest/objects.inv
           options:
             show_signature_annotations: true
             members_order: source
+            docstring_section_style: spacy
+            line_length: 100
 markdown_extensions:
   - pymdownx.highlight:
       use_pygments: true
   - pymdownx.superfences
   - pymdownx.inlinehilite
   - pymdownx.snippets
+  - toc:
+      permalink: true
 extra_css:
   - css/code_select.css
   - css/annotations.css

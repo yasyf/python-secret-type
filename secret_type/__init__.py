@@ -30,7 +30,7 @@
 
     # Docs
 
-    For complete docs, see [`secret`][secret_type.secret].
+    For complete docs, see the [Quickstart](quickstart.md), or check out the [API Reference](reference/index.md).
 
     # Features
       - When marked as secret, values cannot be printed or logged; attempting to do so will raise an exception.
@@ -139,6 +139,8 @@ def secret(o: T) -> Secret[T]:
       with secret("foo").dangerous_reveal() as value:
         assert value == "foo"
     ```
+
+    ## More Docs
 
     For more details, see the [`Secret`][secret_type.Secret] class.
     """

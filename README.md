@@ -2,13 +2,15 @@
 
 [![PyPI - Version](https://img.shields.io/pypi/v/secret-type.svg)](https://pypi.org/project/secret-type)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/secret-type.svg)](https://pypi.org/project/secret-type)
+[![Documentation Status](https://readthedocs.org/projects/python-secret-type/badge/?version=latest)](https://python-secret-type.readthedocs.io/en/latest/?badge=latest)
 
------
+---
 
 **Table of Contents**
 
-- [Installation](#installation)
-- [License](#license)
+- [secret-type](#secret-type)
+  - [Installation](#installation)
+  - [License](#license)
 
 ## Installation
 

@@ -8,7 +8,18 @@ description = 'A Rune-style secret type for sensitive values in Python.'
 readme = "README.md"
 requires-python = ">=3.7"
 license = "MIT"
-keywords = []
+keywords = [
+  "security",
+  "secrets",
+  "sensitive",
+  "sensitive-data",
+  "sensitive-information",
+  "sensitive-values",
+  "secrets",
+  "type-hints",
+  "types",
+  "typing",
+]
 authors = [{ name = "Yasyf Mohamedali", email = "yasyfm@gmail.com" }]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -36,10 +47,10 @@ path = "secret_type/__about__.py"
 dependencies = [
   "pytest",
   "pytest-cov",
-  "mkdocs",
-  "mkdocstrings[python]",
-  "mkdocs-material",
-  "Pygments",
+  "mkdocs~=1.4.2",
+  "mkdocstrings[python]~=0.19.0",
+  "mkdocs-material~=8.5.10",
+  "Pygments~=2.13.0",
 ]
 [tool.hatch.envs.default.scripts]
 cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=secret_type --cov=tests {args}"
