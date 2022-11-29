@@ -5,9 +5,9 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/secret-type.svg)](https://pypi.org/project/secret-type)
 [![Documentation Status](https://readthedocs.org/projects/python-secret-type/badge/?version=latest)](https://python-secret-type.readthedocs.io/en/latest/?badge=latest)
 
----
-
 `secret-type` provides a convenient type (`secret`) to indicate that a value is considered sensitive, similar to the `secret` type in Google's [Rune Lang](https://github.com/google/rune).
+
+---
 
 ## Installation
 
