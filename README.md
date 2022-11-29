@@ -52,10 +52,10 @@ For complete docs, see the [Quickstart](https://python-secret-type.readthedocs.i
 Rune makes the following guarantees about a `secret`:
 
 > - All operations on secrets occur in constant time, minimizing timing side-channel leakage.
-- Secrets cannot be used in conditional branches or memory addressing.
-- Even speculative branching and indexing on secrets are caught at compile-time to avoid Specter/Meltdown.
-- Secrecy is sticky: any value in part derived from a secret is considered secret until "revealed".
-- Secrets are automatically zeroed when no longer used
+> - Secrets cannot be used in conditional branches or memory addressing.
+> - Even speculative branching and indexing on secrets are caught at compile-time to avoid Specter/Meltdown.
+> - Secrecy is sticky: any value in part derived from a secret is considered secret until "revealed".
+> - Secrets are automatically zeroed when no longer used
 
 This projects attempts to do something similar, but with the runtime constraints of Python.
 
