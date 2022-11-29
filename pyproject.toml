@@ -36,7 +36,7 @@ dependencies = ["cryptography", "typing-extensions"]
 dynamic = ["version"]
 
 [project.urls]
-Documentation = "https://github.com/yasyf/secret-type#readme"
+Documentation = "https://python-secret-type.readthedocs.io"
 Issues = "https://github.com/yasyf/secret-type/issues"
 Source = "https://github.com/yasyf/secret-type"
 

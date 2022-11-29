@@ -34,9 +34,9 @@
 
     # Features
       - When marked as secret, values cannot be printed or logged; attempting to do so will raise an exception.
-    Secrets are "viral"; any operation on a secret will also return a secret.
+      - Secrets are "viral"; any operation on a secret will also return a secret.
       - Comparison operations with a `secret` are guaranteed to be constant-time.
-    This helps avoid timing attacks.
+        This helps avoid timing attacks.
       - A `bool` derived from a secret cannot be used for control flow.
       - Secrets cannot be used as indexes or keys for containers.
       - Internally, the underlying value is stored encrypted in memory, and is only decrypted when deriving a new value.

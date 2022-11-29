@@ -2,6 +2,8 @@ site_name: secret-type
 site_url: https://python-secret-type.readthedocs.io
 site_description: "A Rune-style secret type for sensitive values in Python."
 repo_url: https://github.com/yasyf/python-secret-type
+repo_name: yasyf/python-secret-type
+edit_uri: edit/main/docs/
 extra:
   analytics:
     provider: google
