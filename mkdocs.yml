@@ -1,5 +1,11 @@
 site_name: secret-type
 site_url: https://python-secret-type.readthedocs.io
+site_description: "A Rune-style secret type for sensitive values in Python."
+repo_url: https://github.com/yasyf/python-secret-type
+extra:
+  analytics:
+    provider: google
+    property: G-JLMNJ8DZPN
 nav:
   - Home: index.md
   - Quickstart: quickstart.md
@@ -29,6 +35,10 @@ theme:
 plugins:
   - search
   - autorefs
+  - social
+  - git-committers:
+      repository: yasyf/python-secret-type
+      branch: main
   - mkdocstrings:
       enable_inventory: true
       handlers:
