@@ -1,0 +1,26 @@
+site_name: secret-type
+theme:
+  name: material
+  features:
+    - content.code.annotate
+plugins:
+  - search
+  - autorefs
+  - mkdocstrings:
+      enable_inventory: true
+      handlers:
+        python:
+          import:
+            - https://docs.python.org/3.10/objects.inv
+          options:
+            show_signature_annotations: true
+            members_order: source
+markdown_extensions:
+  - pymdownx.highlight:
+      use_pygments: true
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+extra_css:
+  - css/code_select.css
+  - css/annotations.css

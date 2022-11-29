@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING, Optional, Tuple, Union
 
 if TYPE_CHECKING:
-    from secret_type.number import SecretNumber
+    from secret_type.containers.number import SecretNumber
 
 
 class IntegerOps:

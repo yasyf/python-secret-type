@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "secret-type"
-description = 'Rune-style secret type.'
+description = 'A Rune-style secret type for sensitive values in Python.'
 readme = "README.md"
 requires-python = ">=3.7"
 license = "MIT"
@@ -21,7 +21,7 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = ["cryptography"]
+dependencies = ["cryptography", "typing-extensions"]
 dynamic = ["version"]
 
 [project.urls]
@@ -33,7 +33,14 @@ Source = "https://github.com/yasyf/secret-type"
 path = "secret_type/__about__.py"
 
 [tool.hatch.envs.default]
-dependencies = ["pytest", "pytest-cov"]
+dependencies = [
+  "pytest",
+  "pytest-cov",
+  "mkdocs",
+  "mkdocstrings[python]",
+  "mkdocs-material",
+  "Pygments",
+]
 [tool.hatch.envs.default.scripts]
 cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=secret_type --cov=tests {args}"
 no-cov = "cov --no-cov {args}"

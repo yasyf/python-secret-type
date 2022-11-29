@@ -2,10 +2,10 @@ import operator
 from abc import ABCMeta
 from numbers import Integral
 
-from secret_type.base import Secret
+from secret_type.containers.secret import Secret
 from secret_type.exceptions import SecretFloatException, SecretKeyException
-from secret_type.number_types import IntegerOps
-from secret_type.types import N
+from secret_type.typing.number_types import IntegerOps
+from secret_type.typing.types import N
 
 
 class SecretNumberMeta(ABCMeta):
@@ -41,6 +41,13 @@ class SecretNumberMeta(ABCMeta):
 
 
 class SecretNumber(IntegerOps, Secret[N], Integral, metaclass=SecretNumberMeta):
+    """A specialized subclass of [`Secret[IntLike]`][secret_type.Secret] for holding ints or floats.
+
+    This class provides wrappers for every major numeric operation supported by `int`.
+    Simply call the methods as you would on a regular `int`.
+    The result will, of course, be another `SecretNumber`.
+    """
+
     def __index__(self) -> "SecretNumber[int]":
         raise SecretKeyException()
 

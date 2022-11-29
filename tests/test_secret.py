@@ -7,8 +7,8 @@ from cryptography.hazmat.primitives.kdf.scrypt import Scrypt
 
 import secret_type
 from secret_type import Secret
+from secret_type.containers.number import SecretNumber
 from secret_type.exceptions import SecretBoolException, SecretException
-from secret_type.number import SecretNumber
 
 
 class TestSecret:
@@ -50,7 +50,7 @@ class TestSecret:
             hashlib.sha1(secret.encode())
 
     def test_secret_sha1_succeeds(self, secret: Secret[str]):
-        sha1 = secret.cast(bytes).dangerous_apply(lambda x: hashlib.sha1(x).hexdigest())
+        sha1 = secret.cast(bytes).dangerous_map(lambda x: hashlib.sha1(x).hexdigest())
 
         with pytest.raises(SecretException):
             assert sha1 == b"6ffd8b80f2a76ca670ae33ab196f7936d59fb43b"
@@ -65,7 +65,7 @@ class TestSecret:
         with pytest.raises(SecretException):
             kdf.derive(secret.encode())
 
-        key = secret.cast(bytes).dangerous_apply(kdf.derive)
+        key = secret.cast(bytes).dangerous_map(kdf.derive)
 
         # store key as plaintext
         key_plain = key._dangerous_extract()
@@ -74,8 +74,7 @@ class TestSecret:
 
         # verify key
         kdf = Scrypt(salt=salt, length=32, n=2**14, r=8, p=1)
-        with secret.cast(bytes).dangerous_reveal() as revealed:
-            kdf.verify(revealed, key_plain)
+        secret.cast(bytes).dangerous_apply(kdf.verify, key_plain)
 
     def test_secret_concat(self, secret: Secret[str]):
         result = secret + "foobar"
@@ -100,7 +99,7 @@ class TestSecret:
         one_thousand_six_hundred = one_hundred << 4
         one_hundred_squared = (one_thousand_six_hundred >> 4) * one_hundred
 
-        one_hundred_again = one_hundred_squared.dangerous_apply(math.sqrt)
+        one_hundred_again = one_hundred_squared.dangerous_map(math.sqrt)
         two_hundred = one_hundred_again + one_hundred
 
         with pytest.raises(SecretException):
