@@ -9,7 +9,7 @@ extra:
     provider: google
     property: G-JLMNJ8DZPN
 nav:
-  - Home: index.md
+  - Overview: index.md
   - Quickstart: quickstart.md
   - API Reference:
       - reference/index.md

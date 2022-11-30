@@ -2,16 +2,34 @@
 
 ## tl;dr
 
-Wrap any value in [`secret_type.secret`](#secret_type.secret) and use like you would have used the underlying value. See [operations](#secret_type.secret--operations) for unwrapping and using the value.
+1. Wrap any primitive value in [`secret_type.secret`](#secret_type.secret) and use like you would have used the underlying value.
+2. Your secret will now be [protected](index.md#secret_type--features): it can't be logged, and all operations on it are constant-time (to avoid timing attacks).
+3. See [operations](#secret_type.secret--operations) for unwrapping and using the value. Anything you do involving a secret will create a new secret.
 
-```python
-from secret_type import secret
+```pycon
+>>> from secret_type import secret
+>>> password = secret("a very secret value") # (1)!
 
-protected = secret("hello") + ", world!"
-# `print(protected)` would raise an exception
-with protected.dangerous_reveal() as value:
-    assert value == "hello, world!"
+>>> print(password) # (2)!
+Traceback (most recent call last):
+File "<stdin>", line 1, in <module>
+File "secret_type/containers/secret.py", line 91, in __str__
+  raise SecretException()
+secret_type.exceptions.SecretException: Secrets cannot be examined
+
+>>> better_password = password + "!" # (3)!
+>>> >>> type(better_password)
+<class 'secret_type.sequence.SecretStr'>
+
+>>> better_password.dangerous_apply(print) # (4)!
+a very secret value!
 ```
+
+ 1. Secrets can be any primitive value
+ 2. Runtime exceptions prevent logging
+ 3. Operations derive new secrets
+ 4. Use [`dangerous_apply`][secret_type.Secret.dangerous_apply] or [`dangerous_map`][secret_type.Secret.dangerous_map] to access the underlying value
+ ```
 
 ## One Function to Rule Them All
 
